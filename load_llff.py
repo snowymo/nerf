@@ -62,9 +62,13 @@ def _minify(basedir, factors=[], resolutions=[]):
 def _load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
     
     poses_arr = np.load(os.path.join(basedir, 'poses_bounds.npy'))
+    # ZH
+    np.savetxt("poses_bounds.txt", poses_arr)
+
     poses = poses_arr[:, :-2].reshape([-1, 3, 5]).transpose([1,2,0])
     bds = poses_arr[:, -2:].transpose([1,0])
-    
+
+    # ZH: full res, 4032x3024
     img0 = [os.path.join(basedir, 'images', f) for f in sorted(os.listdir(os.path.join(basedir, 'images'))) \
             if f.endswith('JPG') or f.endswith('jpg') or f.endswith('png')][0]
     sh = imageio.imread(img0).shape
@@ -92,13 +96,15 @@ def _load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
     if not os.path.exists(imgdir):
         print( imgdir, 'does not exist, returning' )
         return
-    
+
+    # ZH: images8, 504x378
     imgfiles = [os.path.join(imgdir, f) for f in sorted(os.listdir(imgdir)) if f.endswith('JPG') or f.endswith('jpg') or f.endswith('png')]
     if poses.shape[-1] != len(imgfiles):
         print( 'Mismatch between imgs {} and poses {} !!!!'.format(len(imgfiles), poses.shape[-1]) )
         return
     
     sh = imageio.imread(imgfiles[0]).shape
+    # ZH: reshape to 1/8 ?
     poses[:2, 4, :] = np.array(sh[:2]).reshape([2, 1])
     poses[2, 4, :] = poses[2, 4, :] * 1./factor
     
@@ -156,8 +162,9 @@ def render_path_spiral(c2w, up, rads, focal, zdelta, zrate, rots, N):
     hwf = c2w[:,4:5]
     
     for theta in np.linspace(0., 2. * np.pi * rots, N+1)[:-1]:
-        c = np.dot(c2w[:3,:4], np.array([np.cos(theta), -np.sin(theta), -np.sin(theta*zrate), 1.]) * rads) 
+        c = np.dot(c2w[:3,:4], np.array([np.cos(theta), -np.sin(theta), -np.sin(theta*zrate), 1.]) * rads)
         z = normalize(c - np.dot(c2w[:3,:4], np.array([0,0,-focal, 1.])))
+        print("theta", theta, "c", c, "z", z)
         render_poses.append(np.concatenate([viewmatrix(z, up, c), hwf], 1))
     return render_poses
     
@@ -240,7 +247,7 @@ def spherify_poses(poses, bds):
     return poses_reset, new_poses, bds
     
 
-def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=False, path_zflat=False):
+def load_llff_data(basedir, N_rots=2, factor=8, recenter=True, bd_factor=.75, spherify=False, path_zflat=False):
     
 
     poses, bds, imgs = _load_data(basedir, factor=factor) # factor=8 downsamples original imgs by 8x
@@ -249,25 +256,36 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
     # Correct rotation matrix ordering and move variable dim to axis 0
     poses = np.concatenate([poses[:, 1:2, :], -poses[:, 0:1, :], poses[:, 2:, :]], 1)
     poses = np.moveaxis(poses, -1, 0).astype(np.float32)
+    # print("poses", poses)
     imgs = np.moveaxis(imgs, -1, 0).astype(np.float32)
     images = imgs
     bds = np.moveaxis(bds, -1, 0).astype(np.float32)
-    
+    # print("bds", bds)
+
     # Rescale if bd_factor is provided
     sc = 1. if bd_factor is None else 1./(bds.min() * bd_factor)
     poses[:,:3,3] *= sc
     bds *= sc
+    # print("rescale")
+    # print("poses", poses)
+    # print("bds", bds)
     
     if recenter:
         poses = recenter_poses(poses)
+        print("rescenter")
+        # print("poses", poses)
+        # print("bds", bds)
         
     if spherify:
         poses, render_poses, bds = spherify_poses(poses, bds)
+        print("spherify")
+        # print("poses", poses)
+        # print("bds", bds)
 
     else:
         
         c2w = poses_avg(poses)
-        print('recentered', c2w.shape)
+        print('recentered c2w', c2w.shape)
         print(c2w[:3,:4])
 
         ## Get spiral
@@ -287,7 +305,7 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
         rads = np.percentile(np.abs(tt), 90, 0)
         c2w_path = c2w
         N_views = 120
-        N_rots = 2
+        # N_rots = 2
         if path_zflat:
 #             zloc = np.percentile(tt, 10, 0)[2]
             zloc = -close_depth * .1

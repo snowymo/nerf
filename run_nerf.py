@@ -175,6 +175,7 @@ def render_rays(ray_batch,
     # Extract lower, upper bound for ray distance.
     bounds = tf.reshape(ray_batch[..., 6:8], [-1, 1, 2])
     near, far = bounds[..., 0], bounds[..., 1]  # [-1,1]
+    # print("bounds", bounds[0])
 
     # Decide where to sample along each ray. Under the logic, all rays will be sampled at
     # the same times.
