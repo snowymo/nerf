@@ -266,7 +266,7 @@ def spherify_poses(poses, bds):
 
 def spherify_camera_poses(poses, up, rads, focal, zdelta, zrate, N):
     # 1) ensure the center is what we want
-    # 2)
+    # 2) test 0~90, test 0~-90, test - 88 ~ 90
 
     # lc2w, cc2w, rc2w = poses_xaxis(poses)
     c2w = poses_avg(poses)
@@ -275,8 +275,11 @@ def spherify_camera_poses(poses, up, rads, focal, zdelta, zrate, N):
     hwf = c2w[:, 4:5]
     center = poses[:, :3, 3].mean(0)
 
-    for yangle in np.linspace(0, np.pi / 2, N + 1)[:-1]:
-        for xangle in np.linspace(-np.pi / 18, np.pi / 18, 4+1)[:-1]:
+    ring =np.concatenate((np.flip(np.linspace(0, -np.pi / 2, 20 + 1, endpoint=False)[:-1]),
+                          np.linspace(0, np.pi / 2, 20 + 1, endpoint=False)[1:-1]))
+    startXangle = -np.pi / 18
+    for yangle in ring:  # -90 ~ 90 degree into 40 pieces
+        for xangle in np.linspace(startXangle, startXangle * -1, 4 + 1):  # -10 ~ 10 degree into 5 pieces
             r = R.from_euler('zyx', [[0, yangle, xangle]])
             rmax = r.as_matrix().reshape(3, 3)
             m = np.stack([rmax[:, 0],
@@ -284,6 +287,7 @@ def spherify_camera_poses(poses, up, rads, focal, zdelta, zrate, N):
                       rmax[:, 2],
                       center], 1)
             render_poses.append(np.concatenate([m, hwf], 1))
+        startXangle *= -1
 
     # for theta in np.linspace(0., 2. * np.pi, N + 1)[:-1]:
     #     c = np.dot(cc2w[:3, :4], np.array([np.cos(theta), -np.sin(theta), -np.sin(theta * zrate), 1.]) * rads)
