@@ -1,6 +1,6 @@
 import numpy as np
 import os, imageio
-
+from scipy.spatial.transform import Rotation as R
 
 ########## Slightly modified version of LLFF data loading code 
 ##########  see https://github.com/Fyusion/LLFF for original
@@ -155,6 +155,23 @@ def poses_avg(poses):
     return c2w
 
 
+def poses_xaxis(poses):
+    hwf = poses[0, :3, -1:]
+
+    left = poses[:, :3, 3].min(0)
+    center = poses[:, :3, 3].mean(0)
+    right = poses[:, :3, 3].max(0)
+    vec2 = normalize(poses[:, :3, 2].sum(0))
+    up = poses[:, :3, 1].sum(0)
+    leftc2w = np.concatenate([viewmatrix(vec2, up, left), hwf], 1)
+    centerc2w = np.concatenate(
+        [viewmatrix(vec2, up, center), hwf], 1)
+    rightc2w = np.concatenate(
+        [viewmatrix(vec2, up, right), hwf], 1)
+
+    return leftc2w, centerc2w, rightc2w
+
+
 
 def render_path_spiral(c2w, up, rads, focal, zdelta, zrate, rots, N):
     render_poses = []
@@ -164,7 +181,7 @@ def render_path_spiral(c2w, up, rads, focal, zdelta, zrate, rots, N):
     for theta in np.linspace(0., 2. * np.pi * rots, N+1)[:-1]:
         c = np.dot(c2w[:3,:4], np.array([np.cos(theta), -np.sin(theta), -np.sin(theta*zrate), 1.]) * rads)
         z = normalize(c - np.dot(c2w[:3,:4], np.array([0,0,-focal, 1.])))
-        print("theta", theta, "c", c, "z", z)
+        # print("theta", theta, "c", c, "z", z)
         render_poses.append(np.concatenate([viewmatrix(z, up, c), hwf], 1))
     return render_poses
     
@@ -245,6 +262,35 @@ def spherify_poses(poses, bds):
     poses_reset = np.concatenate([poses_reset[:,:3,:4], np.broadcast_to(poses[0,:3,-1:], poses_reset[:,:3,-1:].shape)], -1)
     
     return poses_reset, new_poses, bds
+
+
+def spherify_camera_poses(poses, up, rads, focal, zdelta, zrate, N):
+    # 1) ensure the center is what we want
+    # 2)
+
+    # lc2w, cc2w, rc2w = poses_xaxis(poses)
+    c2w = poses_avg(poses)
+    render_poses = []
+    rads = np.array(list(rads) + [1.])
+    hwf = c2w[:, 4:5]
+    center = poses[:, :3, 3].mean(0)
+
+    for yangle in np.linspace(0, np.pi / 2, N + 1)[:-1]:
+        for xangle in np.linspace(-np.pi / 18, np.pi / 18, 4+1)[:-1]:
+            r = R.from_euler('zyx', [[0, yangle, xangle]])
+            rmax = r.as_matrix().reshape(3, 3)
+            m = np.stack([rmax[:, 0],
+                      rmax[:, 1],
+                      rmax[:, 2],
+                      center], 1)
+            render_poses.append(np.concatenate([m, hwf], 1))
+
+    # for theta in np.linspace(0., 2. * np.pi, N + 1)[:-1]:
+    #     c = np.dot(cc2w[:3, :4], np.array([np.cos(theta), -np.sin(theta), -np.sin(theta * zrate), 1.]) * rads)
+    #     z = normalize(c - np.dot(cc2w[:3, :4], np.array([0, 0, -focal, 1.])))
+    #     render_poses.append(np.concatenate([viewmatrix(z, up, c), hwf], 1))
+
+    return render_poses
     
 
 def load_llff_data(basedir, N_rots=2, factor=8, recenter=True, bd_factor=.75, spherify=False, path_zflat=False):
@@ -275,7 +321,7 @@ def load_llff_data(basedir, N_rots=2, factor=8, recenter=True, bd_factor=.75, sp
         print("rescenter")
         # print("poses", poses)
         # print("bds", bds)
-        
+
     if spherify:
         poses, render_poses, bds = spherify_poses(poses, bds)
         print("spherify")
@@ -304,7 +350,7 @@ def load_llff_data(basedir, N_rots=2, factor=8, recenter=True, bd_factor=.75, sp
         tt = poses[:,:3,3] # ptstocam(poses[:3,3,:].T, c2w).T
         rads = np.percentile(np.abs(tt), 90, 0)
         c2w_path = c2w
-        N_views = 120
+        N_views = 60 * N_rots
         # N_rots = 2
         if path_zflat:
 #             zloc = np.percentile(tt, 10, 0)[2]
@@ -315,9 +361,10 @@ def load_llff_data(basedir, N_rots=2, factor=8, recenter=True, bd_factor=.75, sp
             N_views/=2
 
         # Generate poses for spiral path
+        # print("generating N_rots",N_rots,"N_views",N_views)
         render_poses = render_path_spiral(c2w_path, up, rads, focal, zdelta, zrate=.5, rots=N_rots, N=N_views)
-        
-        
+
+    render_poses = spherify_camera_poses(poses, up, rads, focal, zdelta, zrate=.5, N= 40)
     render_poses = np.array(render_poses).astype(np.float32)
 
     c2w = poses_avg(poses)
