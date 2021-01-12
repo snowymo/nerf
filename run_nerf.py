@@ -595,15 +595,6 @@ def train():
                                                                   spherify=args.spherify)
         hwf = poses[0, :3, -1]
         poses = poses[:, :3, :4]
-        if args.render_poses != '':
-        #     load the render path from file
-            render_poses = np.loadtxt(os.path.join(args.datadir, "render_poses.txt"))
-            if render_poses.shape[0] >= 15:
-                # render_poses.reshape((render_poses.shape[0] / 15, 3,5))
-                render_poses = np.reshape(render_poses, (render_poses.shape[0]/15, 3, 5))
-            else:
-                # render_poses.reshape((render_poses.shape[0], 3, 5))
-                render_poses = np.reshape(render_poses, (render_poses.shape[0], 3, 5))
         #     with open(f, 'w') as file:
         #         file.write(open(args.config, 'r').read())
         print('Loaded llff', images.shape,
@@ -669,6 +660,15 @@ def train():
 
     if args.render_test:
         render_poses = np.array(poses[i_test])
+    if args.render_poses:
+        #     load the render path from file
+        render_poses = np.loadtxt(os.path.join(args.datadir, "render_poses.txt"))
+        if render_poses.shape[0] >= 15:
+            # render_poses.reshape((render_poses.shape[0] / 15, 3,5))
+            render_poses = np.reshape(render_poses, (render_poses.shape[0] / 15, 3, 5)).astype(np.float32)
+        else:
+            # render_poses.reshape((render_poses.shape[0], 3, 5))
+            render_poses = np.reshape(render_poses, (render_poses.shape[0], 3, 5)).astype(np.float32)
 
     # Create log dir and copy the config file
     basedir = args.basedir
@@ -705,8 +705,15 @@ def train():
             # Default is smoother render_poses path
             images = None
 
+        folder = 'path'
+        if args.render_test:
+            folder = 'test'
+        elif args.render_poses:
+            folder = 'poses'
+        # testsavedir = os.path.join(basedir, expname, 'renderonly_{}_{:06d}'.format(
+        #     'test' if args.render_test else 'path', start))
         testsavedir = os.path.join(basedir, expname, 'renderonly_{}_{:06d}'.format(
-            'test' if args.render_test else 'path', start))
+            folder, start))
         os.makedirs(testsavedir, exist_ok=True)
         print('test poses shape', render_poses.shape)
 
