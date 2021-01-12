@@ -297,7 +297,7 @@ def spherify_camera_poses(poses, up, rads, focal, zdelta, zrate, N):
     return render_poses
     
 
-def load_llff_data(basedir, N_rots=2, factor=8, recenter=True, bd_factor=.75, spherify=False, path_zflat=False):
+def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=False, path_zflat=False):
     
 
     poses, bds, imgs = _load_data(basedir, factor=factor) # factor=8 downsamples original imgs by 8x
@@ -354,22 +354,23 @@ def load_llff_data(basedir, N_rots=2, factor=8, recenter=True, bd_factor=.75, sp
         tt = poses[:,:3,3] # ptstocam(poses[:3,3,:].T, c2w).T
         rads = np.percentile(np.abs(tt), 90, 0)
         c2w_path = c2w
-        N_views = 60 * N_rots
+        N_views = 120
         # N_rots = 2
         if path_zflat:
 #             zloc = np.percentile(tt, 10, 0)[2]
             zloc = -close_depth * .1
             c2w_path[:3,3] = c2w_path[:3,3] + zloc * c2w_path[:3,2]
             rads[2] = 0.
-            N_rots = 1
+            # N_rots = 1
             N_views/=2
 
         # Generate poses for spiral path
         # print("generating N_rots",N_rots,"N_views",N_views)
-        render_poses = render_path_spiral(c2w_path, up, rads, focal, zdelta, zrate=.5, rots=N_rots, N=N_views)
+        render_poses = render_path_spiral(c2w_path, up, rads, focal, zdelta, zrate=.5, rots=2, N=N_views)
 
     render_poses = spherify_camera_poses(poses, up, rads, focal, zdelta, zrate=.5, N= 40)
     render_poses = np.array(render_poses).astype(np.float32)
+    render_poses = poses
 
     c2w = poses_avg(poses)
     print('Data:')
