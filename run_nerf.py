@@ -529,6 +529,8 @@ def config_parser():
                         help='render the test set instead of render_poses path')
     parser.add_argument("--render_factor", type=int, default=0,
                         help='downsampling factor to speed up rendering, set 4 or 8 for fast preview')
+    parser.add_argument("--render_poses", action='store_true',
+                        help='specify the file for rendering')
 
     # dataset options
     parser.add_argument("--dataset_type", type=str, default='llff',
@@ -549,6 +551,8 @@ def config_parser():
     # llff flags
     parser.add_argument("--factor", type=int, default=8,
                         help='downsample factor for LLFF images')
+    parser.add_argument("--N_rots", type=int, default=2,
+                        help='render poses rotation range')
     parser.add_argument("--no_ndc", action='store_true',
                         help='do not use normalized device coordinates (set for non-forward facing scenes)')
     parser.add_argument("--lindisp", action='store_true',
@@ -586,11 +590,22 @@ def train():
     # Load data
 
     if args.dataset_type == 'llff':
-        images, poses, bds, render_poses, i_test = load_llff_data(args.datadir, args.factor,
+        images, poses, bds, render_poses, i_test = load_llff_data(args.datadir, args.N_rots, args.factor,
                                                                   recenter=True, bd_factor=.75,
                                                                   spherify=args.spherify)
         hwf = poses[0, :3, -1]
         poses = poses[:, :3, :4]
+        if args.render_poses != '':
+        #     load the render path from file
+            render_poses = np.loadtxt(os.path.join(args.datadir, "render_poses.txt"))
+            if render_poses.shape[0] >= 15:
+                # render_poses.reshape((render_poses.shape[0] / 15, 3,5))
+                render_poses = np.reshape(render_poses, (render_poses.shape[0]/15, 3, 5))
+            else:
+                # render_poses.reshape((render_poses.shape[0], 3, 5))
+                render_poses = np.reshape(render_poses, (render_poses.shape[0], 3, 5))
+        #     with open(f, 'w') as file:
+        #         file.write(open(args.config, 'r').read())
         print('Loaded llff', images.shape,
               render_poses.shape, hwf, args.datadir)
         if not isinstance(i_test, list):
@@ -598,7 +613,8 @@ def train():
 
         if args.llffhold > 0:
             print('Auto LLFF holdout,', args.llffhold)
-            i_test = np.arange(images.shape[0])[::args.llffhold]
+            # i_test = np.arange(images.shape[0])[::args.llffhold]
+            i_test = np.arange(images.shape[0])[0:int(images.shape[0] / args.llffhold):]
 
         i_val = i_test
         i_train = np.array([i for i in np.arange(int(images.shape[0])) if
@@ -668,7 +684,7 @@ def train():
         with open(f, 'w') as file:
             file.write(open(args.config, 'r').read())
 
-    # Create nerf model
+    # Create nerf modelllffhold
     render_kwargs_train, render_kwargs_test, start, grad_vars, models = create_nerf(
         args)
 
