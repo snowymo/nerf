@@ -587,7 +587,7 @@ def train():
     if args.dataset_type == 'llff':
         images, poses, bds, render_poses, i_test = load_llff_data(args.datadir, args.factor,
                                                                   recenter=True, bd_factor=.75,
-                                                                  spherify=args.spherify)
+                                                                  spherify=args.spherify, test_index=args.llffhold)
         hwf = poses[0, :3, -1]
         poses = poses[:, :3, :4]
         print('Loaded llff', images.shape,
@@ -597,7 +597,8 @@ def train():
 
         if args.llffhold > 0:
             print('Auto LLFF holdout,', args.llffhold)
-            i_test = np.arange(images.shape[0])[::args.llffhold]
+            # i_test = np.arange(images.shape[0])[::args.llffhold]
+            i_test = np.arange(images.shape[0])[0:int(images.shape[0] / args.llffhold):]
 
         i_val = i_test
         i_train = np.array([i for i in np.arange(int(images.shape[0])) if
