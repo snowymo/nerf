@@ -589,8 +589,9 @@ def train():
 
     # Load data
     sc = 1.
+    center = None
     if args.dataset_type == 'llff':
-        images, poses, bds, render_poses, i_test = load_llff_data(args.datadir, args.N_rots, args.factor,
+        images, poses, bds, render_poses, i_test, center = load_llff_data(args.datadir, args.N_rots, args.factor,
                                                                   recenter=True, bd_factor=.75,
                                                                   spherify=args.spherify)
         hwf = poses[0, :3, -1]
@@ -676,8 +677,8 @@ def train():
         # Rescale if bd_factor is provided
         # sc = 1. if bd_factor is None else 1. / (bds.min() * bd_factor)
         print("sc", sc)
-        poses[:, :3, 3] *= sc #1.333 # output from load_llff.py
-        render_poses = recenter_poses(render_poses)
+        render_poses[:, :3, 3] *= sc #1.333 # output from load_llff.py
+        # render_poses = recenter_poses(render_poses) # should recenter according to
 
     # Create log dir and copy the config file
     basedir = args.basedir

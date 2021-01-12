@@ -199,7 +199,7 @@ def recenter_poses(poses):
     poses = np.linalg.inv(c2w) @ poses
     poses_[:,:3,:4] = poses[:,:3,:4]
     poses = poses_
-    return poses
+    return poses, c2w
 
 
 #####################
@@ -320,9 +320,10 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
     print("rescale", sc)
     # print("poses", poses)
     # print("bds", bds)
-    
+
+    center = None
     if recenter:
-        poses = recenter_poses(poses)
+        poses, center = recenter_poses(poses)
         print("rescenter")
         # print("poses", poses)
         # print("bds", bds)
@@ -384,7 +385,7 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
     images = images.astype(np.float32)
     poses = poses.astype(np.float32)
 
-    return images, poses, bds, render_poses, i_test
+    return images, poses, bds, render_poses, i_test, center
 
 
 
