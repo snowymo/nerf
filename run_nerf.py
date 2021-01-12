@@ -9,7 +9,7 @@ import json
 import random
 import time
 from run_nerf_helpers import *
-from load_llff import load_llff_data
+from load_llff import load_llff_data, recenter_poses
 from load_deepvoxels import load_dv_data
 from load_blender import load_blender_data
 
@@ -669,6 +669,13 @@ def train():
         else:
             # render_poses.reshape((render_poses.shape[0], 3, 5))
             render_poses = np.reshape(render_poses, (render_poses.shape[0], 3, 5)).astype(np.float32)
+        # Correct rotation matrix ordering and move variable dim to axis 0
+        render_poses = np.concatenate([render_poses[:, 1:2, :], -render_poses[:, 0:1, :], render_poses[:, 2:, :]], 1)
+        render_poses = np.moveaxis(render_poses, -1, 0).astype(np.float32)
+        # Rescale if bd_factor is provided
+        # sc = 1. if bd_factor is None else 1. / (bds.min() * bd_factor)
+        # poses[:, :3, 3] *= sc
+        render_poses = recenter_poses(render_poses)
 
     # Create log dir and copy the config file
     basedir = args.basedir
