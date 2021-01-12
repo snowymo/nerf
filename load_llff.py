@@ -59,13 +59,18 @@ def _minify(basedir, factors=[], resolutions=[]):
         
         
         
-def _load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
+def _load_data(basedir, factor=None, width=None, height=None, load_imgs=True, render_specify = False):
     
     poses_arr = np.load(os.path.join(basedir, 'poses_bounds.npy'))
+    render_specify_poses = None
+    if render_specify:
+        render_specify_poses= np.load(os.path.join(basedir, 'render_poses.npy'))
     # ZH
     np.savetxt("poses_bounds.txt", poses_arr)
 
     poses = poses_arr[:, :-2].reshape([-1, 3, 5]).transpose([1,2,0])
+    if render_specify:
+        render_specify_poses= render_specify_poses[:, :-2].reshape([-1, 3, 5]).transpose([1,2,0])
     bds = poses_arr[:, -2:].transpose([1,0])
 
     # ZH: full res, 4032x3024
@@ -107,7 +112,10 @@ def _load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
     # ZH: reshape to 1/8 ?
     poses[:2, 4, :] = np.array(sh[:2]).reshape([2, 1])
     poses[2, 4, :] = poses[2, 4, :] * 1./factor
-    
+    if render_specify:
+        render_specify_poses[:2, 4, :] = np.array(sh[:2]).reshape([2, 1])
+        render_specify_poses[2, 4, :] = render_specify_poses[2, 4, :] * 1. / factor
+
     if not load_imgs:
         return poses, bds
     
@@ -121,7 +129,7 @@ def _load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
     imgs = np.stack(imgs, -1)  
     
     print('Loaded image data', imgs.shape, poses[:,-1,0])
-    return poses, bds, imgs
+    return poses, bds, imgs, render_specify_poses
 
     
             
@@ -187,7 +195,7 @@ def render_path_spiral(c2w, up, rads, focal, zdelta, zrate, rots, N):
     
 
 
-def recenter_poses(poses):
+def recenter_poses(poses, render_specify=False, render_specify_poses = None):
 
     poses_ = poses+0
     bottom = np.reshape([0,0,0,1.], [1,4])
@@ -195,11 +203,21 @@ def recenter_poses(poses):
     c2w = np.concatenate([c2w[:3,:4], bottom], -2)
     bottom = np.tile(np.reshape(bottom, [1,1,4]), [poses.shape[0],1,1])
     poses = np.concatenate([poses[:,:3,:4], bottom], -2)
+    render_specify_poses_ = None
+    if render_specify:
+        render_specify_poses_ = render_specify_poses + 0
+        bottom2 = np.reshape([0, 0, 0, 1.], [1, 4])
+        bottom2 = np.tile(np.reshape(bottom2, [1, 1, 4]), [render_specify_poses_.shape[0], 1, 1])
+        render_specify_poses = np.concatenate([render_specify_poses[:,:3,:4], bottom2], -2)
 
     poses = np.linalg.inv(c2w) @ poses
     poses_[:,:3,:4] = poses[:,:3,:4]
     poses = poses_
-    return poses, c2w
+    if render_specify:
+        render_specify_poses = np.linalg.inv(c2w) @ render_specify_poses
+        render_specify_poses_[:, :3, :4] = render_specify_poses[:, :3, :4]
+        render_specify_poses = render_specify_poses_
+    return poses, render_specify_poses
 
 
 #####################
@@ -298,15 +316,22 @@ def spherify_camera_poses(poses, up, rads, focal, zdelta, zrate, N):
     return render_poses
     
 
-def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=False, path_zflat=False):
+def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=False, path_zflat=False, render_specify = False):
     
 
-    poses, bds, imgs = _load_data(basedir, factor=factor) # factor=8 downsamples original imgs by 8x
+    poses, bds, imgs, render_specify_poses = _load_data(basedir, factor=factor, render_specify=render_specify) # factor=8 downsamples original imgs by 8x
     print('Loaded', basedir, bds.min(), bds.max())
-    
+
+    print("before Correct", poses.shape)
     # Correct rotation matrix ordering and move variable dim to axis 0
     poses = np.concatenate([poses[:, 1:2, :], -poses[:, 0:1, :], poses[:, 2:, :]], 1)
     poses = np.moveaxis(poses, -1, 0).astype(np.float32)
+    if render_specify:
+        print("before Correct", render_specify_poses.shape)
+        # Correct rotation matrix ordering and move variable dim to axis 0
+        render_specify_poses = np.concatenate([render_specify_poses[:, 1:2, :], -render_specify_poses[:, 0:1, :], render_specify_poses[:, 2:, :]], 1)
+        render_specify_poses = np.moveaxis(render_specify_poses, -1, 0).astype(np.float32)
+        print("render_specify_poses", render_specify_poses.shape)
     # print("poses", poses)
     imgs = np.moveaxis(imgs, -1, 0).astype(np.float32)
     images = imgs
@@ -316,15 +341,17 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
     # Rescale if bd_factor is provided
     sc = 1. if bd_factor is None else 1./(bds.min() * bd_factor)
     poses[:,:3,3] *= sc
+    if render_specify:
+        render_specify_poses[:,:3,3] *= sc
     bds *= sc
-    print("rescale", sc)
+    print("rescale", sc, poses.shape)
     # print("poses", poses)
     # print("bds", bds)
 
     center = None
     if recenter:
-        poses, center = recenter_poses(poses)
-        print("rescenter")
+        poses, render_specify_poses = recenter_poses(poses, render_specify, render_specify_poses)
+        # print("rescenter", poses.shape, render_specify_poses.shape)
         # print("poses", poses)
         # print("bds", bds)
 
@@ -385,7 +412,7 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
     images = images.astype(np.float32)
     poses = poses.astype(np.float32)
 
-    return images, poses, bds, render_poses, i_test, center
+    return images, poses, bds, render_poses, i_test, render_specify_poses
 
 
 

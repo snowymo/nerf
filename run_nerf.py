@@ -588,16 +588,15 @@ def train():
         tf.compat.v1.set_random_seed(args.random_seed)
 
     # Load data
-    sc = 1.
-    center = None
+    # sc = 1.
+    render_specify_poses = None
     if args.dataset_type == 'llff':
-        images, poses, bds, render_poses, i_test, center = load_llff_data(args.datadir, args.N_rots, args.factor,
+        images, poses, bds, render_poses, i_test, render_specify_poses = load_llff_data(args.datadir, args.factor,
                                                                   recenter=True, bd_factor=.75,
-                                                                  spherify=args.spherify)
+                                                                  spherify=args.spherify, render_specify = args.render_poses)
         hwf = poses[0, :3, -1]
         poses = poses[:, :3, :4]
-        #     with open(f, 'w') as file:
-        #         file.write(open(args.config, 'r').read())
+        np.savetxt("debugPoses.txt", np.reshape(poses, (poses.shape[0], -1)))
         print('Loaded llff', images.shape,
               render_poses.shape, hwf, args.datadir)
         if not isinstance(i_test, list):
@@ -663,21 +662,23 @@ def train():
     if args.render_test:
         render_poses = np.array(poses[i_test])
     if args.render_poses:
-        #     load the render path from file
-        render_poses = np.loadtxt(os.path.join(args.datadir, "render_poses.txt"))
-        if render_poses.shape[0] >= 15:
-            # render_poses.reshape((render_poses.shape[0] / 15, 3,5))
-            render_poses = np.reshape(render_poses, (render_poses.shape[0] / 15, 3, 5)).astype(np.float32)
-        else:
-            # render_poses.reshape((render_poses.shape[0], 3, 5))
-            render_poses = np.reshape(render_poses, (render_poses.shape[0], 3, 5)).astype(np.float32)
-        # Correct rotation matrix ordering and move variable dim to axis 0
-        render_poses = np.concatenate([render_poses[:, 1:2, :], -render_poses[:, 0:1, :], render_poses[:, 2:, :]], 1)
-        render_poses = np.moveaxis(render_poses, -1, 0).astype(np.float32)
-        # Rescale if bd_factor is provided
-        # sc = 1. if bd_factor is None else 1. / (bds.min() * bd_factor)
-        print("sc", sc)
-        render_poses[:, :3, 3] *= sc #1.333 # output from load_llff.py
+        # #     load the render path from file
+        # render_poses = np.loadtxt(os.path.join(args.datadir, "render_poses.txt"))
+        # if render_poses.shape[0] >= 15:
+        #     # render_poses.reshape((render_poses.shape[0] / 15, 3,5))
+        #     render_poses = np.reshape(render_poses, (render_poses.shape[0] / 15, 3, 5)).astype(np.float32)
+        # else:
+        #     # render_poses.reshape((render_poses.shape[0], 3, 5))
+        #     render_poses = np.reshape(render_poses, (render_poses.shape[0], 3, 5)).astype(np.float32)
+        # # Correct rotation matrix ordering and move variable dim to axis 0
+        # render_poses = np.concatenate([render_poses[:, 1:2, :], -render_poses[:, 0:1, :], render_poses[:, 2:, :]], 1)
+        # # render_poses = np.moveaxis(render_poses, -1, 0).astype(np.float32)
+        # # Rescale if bd_factor is provided
+        # # sc = 1. if bd_factor is None else 1. / (bds.min() * bd_factor)
+        # print("sc", sc, render_poses.shape)
+        # render_poses[:, :3, 3] *= 1.33 #1.333 # output from load_llff.py
+        np.savetxt("debugRender_poses.txt", np.reshape(render_specify_poses, (render_specify_poses.shape[0], -1)))
+        render_poses = render_specify_poses
         # render_poses = recenter_poses(render_poses) # should recenter according to
 
     # Create log dir and copy the config file
