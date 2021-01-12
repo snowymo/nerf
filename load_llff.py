@@ -163,11 +163,11 @@ def render_path_spiral(c2w, up, rads, focal, zdelta, zrate, rots, N):
     
 
 
-def recenter_poses(poses):
+def recenter_poses(train_poses, poses):
 
     poses_ = poses+0
     bottom = np.reshape([0,0,0,1.], [1,4])
-    c2w = poses_avg(poses)
+    c2w = poses_avg(train_poses)
     c2w = np.concatenate([c2w[:3,:4], bottom], -2)
     bottom = np.tile(np.reshape(bottom, [1,1,4]), [poses.shape[0],1,1])
     poses = np.concatenate([poses[:,:3,:4], bottom], -2)
@@ -240,11 +240,12 @@ def spherify_poses(poses, bds):
     return poses_reset, new_poses, bds
     
 
-def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=False, path_zflat=False):
+def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=False, path_zflat=False, test_index=1):
     
 
     poses, bds, imgs = _load_data(basedir, factor=factor) # factor=8 downsamples original imgs by 8x
     print('Loaded', basedir, bds.min(), bds.max())
+    print(test_index, imgs.shape[0] / test_index)
     
     # Correct rotation matrix ordering and move variable dim to axis 0
     poses = np.concatenate([poses[:, 1:2, :], -poses[:, 0:1, :], poses[:, 2:, :]], 1)
@@ -259,7 +260,15 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
     bds *= sc
     
     if recenter:
-        poses = recenter_poses(poses)
+        print("_load_data poses_arr.shape", poses.shape)
+        train_arr = poses[(int)(imgs.shape[0] / test_index):, :]
+        print("_load_data train_arr.shape", train_arr.shape)
+        poses = recenter_poses(train_arr, poses)
+
+        c2w = poses_avg(train_arr)
+        print('recentered', c2w.shape)
+        print(c2w[:3, :4])
+        np.savetxt(os.path.join(basedir, 'c2w_poses_avg.txt'), c2w)
         
     if spherify:
         poses, render_poses, bds = spherify_poses(poses, bds)
@@ -312,6 +321,7 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
     
     images = images.astype(np.float32)
     poses = poses.astype(np.float32)
+    render_poses = poses
 
     return images, poses, bds, render_poses, i_test
 
