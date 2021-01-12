@@ -1,6 +1,6 @@
-expname = gas0112_test
+expname = gas0111_test
 basedir = ./logs
-datadir = ./data/gas_nerf_2021.01.12
+datadir = ./data/gas_nerf_2021.01.11
 dataset_type = llff
 
 factor = 1

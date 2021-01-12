@@ -278,16 +278,17 @@ def spherify_camera_poses(poses, up, rads, focal, zdelta, zrate, N):
     ring =np.concatenate((np.flip(np.linspace(0, -np.pi / 2, 20 + 1, endpoint=False)[:-1]),
                           np.linspace(0, np.pi / 2, 20 + 1, endpoint=False)[1:-1]))
     startXangle = -np.pi / 18
-    for yangle in ring:  # -90 ~ 90 degree into 40 pieces
-        for xangle in np.linspace(startXangle, startXangle * -1, 4 + 1):  # -10 ~ 10 degree into 5 pieces
-            r = R.from_euler('zyx', [[0, yangle, xangle]])
+    dir = 1
+    for xangle in np.linspace(startXangle, startXangle * -1, 2 + 1):  # -10 ~ 10 degree into 5 pieces
+        for yangle in ring:  # -90 ~ 90 degree into 40 pieces
+            r = R.from_euler('zyx', [[0, yangle* dir, xangle]])
             rmax = r.as_matrix().reshape(3, 3)
             m = np.stack([rmax[:, 0],
                       rmax[:, 1],
                       rmax[:, 2],
                       center], 1)
             render_poses.append(np.concatenate([m, hwf], 1))
-        startXangle *= -1
+        dir *= -1
 
     # for theta in np.linspace(0., 2. * np.pi, N + 1)[:-1]:
     #     c = np.dot(cc2w[:3, :4], np.array([np.cos(theta), -np.sin(theta), -np.sin(theta * zrate), 1.]) * rads)
@@ -370,6 +371,7 @@ def load_llff_data(basedir, N_rots=2, factor=8, recenter=True, bd_factor=.75, sp
 
     render_poses = spherify_camera_poses(poses, up, rads, focal, zdelta, zrate=.5, N= 40)
     render_poses = np.array(render_poses).astype(np.float32)
+    render_poses = poses
 
     c2w = poses_avg(poses)
     print('Data:')
