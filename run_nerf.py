@@ -588,7 +588,7 @@ def train():
         tf.compat.v1.set_random_seed(args.random_seed)
 
     # Load data
-
+    sc = 1.
     if args.dataset_type == 'llff':
         images, poses, bds, render_poses, i_test = load_llff_data(args.datadir, args.N_rots, args.factor,
                                                                   recenter=True, bd_factor=.75,
@@ -618,6 +618,7 @@ def train():
         else:
             near = 0.
             far = 1.
+        sc = 1. / (bds.min() * .75)
         print('NEAR FAR', near, far)
 
     elif args.dataset_type == 'blender':
@@ -674,7 +675,8 @@ def train():
         render_poses = np.moveaxis(render_poses, -1, 0).astype(np.float32)
         # Rescale if bd_factor is provided
         # sc = 1. if bd_factor is None else 1. / (bds.min() * bd_factor)
-        # poses[:, :3, 3] *= sc
+        print("sc", sc)
+        poses[:, :3, 3] *= sc #1.333 # output from load_llff.py
         render_poses = recenter_poses(render_poses)
 
     # Create log dir and copy the config file
