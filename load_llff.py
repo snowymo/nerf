@@ -265,6 +265,7 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
         print("_load_data train_arr.shape", train_arr.shape)
         if os.path.isfile(os.path.join(basedir, 'c2w_poses_avg.txt')):
             c2w = np.loadtxt(os.path.join(basedir, 'c2w_poses_avg.txt'))
+            print("load c2w", c2w)
             poses = recenter_poses(train_arr, poses, c2w)
         else:
             poses = recenter_poses(train_arr, poses)
