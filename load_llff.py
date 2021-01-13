@@ -163,7 +163,7 @@ def render_path_spiral(c2w, up, rads, focal, zdelta, zrate, rots, N):
     
 
 
-def recenter_poses(train_poses, poses):
+def recenter_poses(train_poses, poses, c2w=None):
 
     poses_ = poses+0
     bottom = np.reshape([0,0,0,1.], [1,4])
@@ -263,12 +263,15 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
         print("_load_data poses_arr.shape", poses.shape)
         train_arr = poses[(int)(imgs.shape[0] / test_index):, :]
         print("_load_data train_arr.shape", train_arr.shape)
-        poses = recenter_poses(train_arr, poses)
-
-        c2w = poses_avg(train_arr)
+        if os.path.isfile(os.path.join(basedir, 'c2w_poses_avg.txt')):
+            c2w = np.loadtxt(os.path.join(basedir, 'c2w_poses_avg.txt'))
+            poses = recenter_poses(train_arr, poses, c2w)
+        else:
+            poses = recenter_poses(train_arr, poses)
+            c2w = poses_avg(train_arr)
+            np.savetxt(os.path.join(basedir, 'c2w_poses_avg.txt'), c2w)
         print('recentered', c2w.shape)
         print(c2w[:3, :4])
-        np.savetxt(os.path.join(basedir, 'c2w_poses_avg.txt'), c2w)
         
     if spherify:
         poses, render_poses, bds = spherify_poses(poses, bds)
