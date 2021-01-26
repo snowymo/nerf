@@ -10,6 +10,7 @@ import random
 import time
 from run_nerf_helpers import *
 from load_llff import load_llff_data
+from load_llff import load_demo_llff_data
 from load_deepvoxels import load_dv_data
 from load_blender import load_blender_data
 
@@ -524,6 +525,10 @@ def config_parser():
 
     parser.add_argument("--render_only", action='store_true',
                         help='do not optimize, reload weights and render out render_poses path')
+    parser.add_argument("--render_demo", action='store_true',
+                        help='[demo] reload weights and render out render_poses path')
+    parser.add_argument("--demo_path", type=str, default="demo_poses.npy",
+                        help='specific demo path file')
     parser.add_argument("--render_test", action='store_true',
                         help='render the test set instead of render_poses path')
     parser.add_argument("--render_factor", type=int, default=0,
@@ -585,33 +590,42 @@ def train():
     # Load data
 
     if args.dataset_type == 'llff':
-        images, poses, bds, render_poses, i_test = load_llff_data(args.datadir, args.factor,
-                                                                  recenter=True, bd_factor=.75,
-                                                                  spherify=args.spherify, test_index=args.llffhold)
-        hwf = poses[0, :3, -1]
-        poses = poses[:, :3, :4]
-        print('Loaded llff', images.shape,
-              render_poses.shape, hwf, args.datadir)
-        if not isinstance(i_test, list):
-            i_test = [i_test]
-
-        if args.llffhold > 0:
-            print('Auto LLFF holdout,', args.llffhold)
-            # i_test = np.arange(images.shape[0])[::args.llffhold]
-            i_test = np.arange(images.shape[0])[0:int(images.shape[0] / args.llffhold):]
-
-        i_val = i_test
-        i_train = np.array([i for i in np.arange(int(images.shape[0])) if
-                            (i not in i_test and i not in i_val)])
-
-        print('DEFINING BOUNDS')
-        if args.no_ndc:
-            near = tf.reduce_min(bds) * .9
-            far = tf.reduce_max(bds) * 1.
-        else:
+        if args.render_demo:
+            render_poses, bds = load_demo_llff_data(args.datadir, args.demo_path, args.factor)
+            i_test = np.arange(render_poses.shape[0])
+            hwf = render_poses[0, :3, -1]
             near = 0.
             far = 1.
-        print('NEAR FAR', near, far)
+        else:
+            print("args.factor", args.factor)
+            images, poses, bds, render_poses, i_test = load_llff_data(args.datadir, args.factor,
+                                                                      recenter=True, bd_factor=.75,
+                                                                      spherify=args.spherify, test_index=args.llffhold)
+            hwf = poses[0, :3, -1]
+            poses = poses[:, :3, :4]
+            print('Loaded llff', images.shape,
+                  render_poses.shape, hwf, args.datadir)
+            if not isinstance(i_test, list):
+                i_test = [i_test]
+
+            if args.llffhold > 0:
+                print('Auto LLFF holdout,', args.llffhold)
+                # i_test = np.arange(images.shape[0])[::args.llffhold]
+                i_test = np.arange(images.shape[0])[0:int(images.shape[0] / args.llffhold):]
+            i_test = np.arange(images.shape[0])[0:20:]
+
+            i_val = i_test
+            i_train = np.array([i for i in np.arange(int(images.shape[0])) if
+                                (i not in i_test and i not in i_val)])
+
+            print('DEFINING BOUNDS')
+            if args.no_ndc:
+                near = tf.reduce_min(bds) * .9
+                far = tf.reduce_max(bds) * 1.
+            else:
+                near = 0.
+                far = 1.
+            print('NEAR FAR', near, far)
 
     elif args.dataset_type == 'blender':
         images, poses, render_poses, hwf, i_split = load_blender_data(
@@ -696,6 +710,20 @@ def train():
 
         rgbs, _ = render_path(render_poses, hwf, args.chunk, render_kwargs_test,
                               gt_imgs=images, savedir=testsavedir, render_factor=args.render_factor)
+        print('Done rendering', testsavedir)
+        imageio.mimwrite(os.path.join(testsavedir, 'video.mp4'),
+                         to8b(rgbs), fps=30, quality=8)
+
+        return
+    if args.render_demo:
+        print('DEMO ONLY')
+
+        testsavedir = os.path.join(basedir, expname, 'demoonly_{:06d}'.format(start))
+        os.makedirs(testsavedir, exist_ok=True)
+        print('test demo shape', render_poses.shape)
+
+        rgbs, _ = render_path(render_poses, hwf, args.chunk, render_kwargs_test,
+                              savedir=testsavedir, render_factor=args.render_factor)
         print('Done rendering', testsavedir)
         imageio.mimwrite(os.path.join(testsavedir, 'video.mp4'),
                          to8b(rgbs), fps=30, quality=8)

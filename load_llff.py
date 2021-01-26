@@ -331,4 +331,34 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
     return images, poses, bds, render_poses, i_test
 
 
+def load_demo_llff_data(basedir, demopath = 'demo_poses.npy', factor=8, bd_factor=.75):
+    poses_arr = np.load(os.path.join(basedir, demopath))
+    poses = poses_arr[:, :-2].reshape([-1, 3, 5]).transpose([1, 2, 0])
+    bds = poses_arr[:, -2:].transpose([1, 0])
+
+    sh = [1600,1440,4]#imageio.imread(imgfiles[0]).shape
+    poses[:2, 4, :] = np.array(sh[:2]).reshape([2, 1])
+    poses[2, 4, :] = poses[2, 4, :] * 1. / factor
+
+    # Correct rotation matrix ordering and move variable dim to axis 0
+    poses = np.concatenate([poses[:, 1:2, :], -poses[:, 0:1, :], poses[:, 2:, :]], 1)
+    poses = np.moveaxis(poses, -1, 0).astype(np.float32)
+    bds = np.moveaxis(bds, -1, 0).astype(np.float32)
+
+    # Rescale if bd_factor is provided
+    sc = 1. if bd_factor is None else 1. / (bds.min() * bd_factor)
+    poses[:, :3, 3] *= sc
+    bds *= sc
+
+    if os.path.isfile(os.path.join(basedir, 'c2w_poses_avg.txt')):
+        c2w = np.loadtxt(os.path.join(basedir, 'c2w_poses_avg.txt'))
+        print("load c2w", c2w)
+        poses = recenter_poses(poses, poses, True, c2w)
+    else:
+        print("FAILED TO FIND C2W")
+
+    demo_poses = poses.astype(np.float32)
+
+    return demo_poses, bds
+
 
