@@ -1,5 +1,40 @@
 import numpy as np
 import json
+import math
+
+def fov2length(angle):
+    return math.tan(math.radians(angle) / 2) * 2
+
+def _convert_camera_params(input_camera_params,
+                           view_res):
+    """
+    Check and convert camera parameters in config file to pixel-space
+
+    :param cam_params: { ["fx", "fy" | "fov"], "cx", "cy", ["normalized"] },
+        the parameters of camera
+    :return: camera parameters
+    """
+    input_is_normalized = bool(input_camera_params.get('normalized'))
+    camera_params = {}
+    if 'fov' in input_camera_params:
+        if input_is_normalized:
+            camera_params['fy'] = 1 / fov2length(input_camera_params['fov'])
+            camera_params['fx'] = camera_params['fy'] / view_res["y"] * view_res["x"]
+        else:
+            camera_params['fx'] = camera_params['fy'] = view_res["x"] / \
+                                                        fov2length(input_camera_params['fov'])
+        camera_params['fy'] *= -1
+    else:
+        camera_params['fx'] = input_camera_params['fx']
+        camera_params['fy'] = input_camera_params['fy']
+    camera_params['cx'] = input_camera_params['cx']
+    camera_params['cy'] = input_camera_params['cy']
+    if input_is_normalized:
+        camera_params['fx'] *= view_res["y"]
+        camera_params['fy'] *= view_res["x"]
+        camera_params['cx'] *= view_res["y"]
+        camera_params['cy'] *= view_res["x"]
+    return camera_params
 
 def load_pose_json(filename,near,far):
     info = None
@@ -9,8 +44,14 @@ def load_pose_json(filename,near,far):
     for i in range(len(info["view_centers"])):
         pose = np.zeros((3, 5), dtype=np.float32)
         Rt = np.eye(4, dtype=np.float32)
-        for j in range(9):
-            Rt[j // 3, j % 3] = info["view_rots"][i][j]
+        if len(info["view_rots"][i]) == 9:
+            for j in range(9):
+                Rt[j // 3, j % 3] = info["view_rots"][i][j]
+        elif len(info["view_rots"][i]) == 2:
+            Rt[1, 1] = math.cos(math.radians(info["view_rots"][i][0]))
+            Rt[2, 1] = math.sin(math.radians(info["view_rots"][i][0]))
+            Rt[1, 2] = -Rt[2,1]
+            Rt[2, 2] = Rt[1,1]
         for j in range(3):
             Rt[j, 3] = info["view_centers"][i][j]
         # Rt = np.linalg.inv(Rt)
@@ -23,7 +64,13 @@ def load_pose_json(filename,near,far):
         
         pose[0, 4] = info["view_res"]["x"]
         pose[1, 4] = info["view_res"]["y"]
-        pose[2, 4] = info["cam_params"]["fx"]
+        # print(info["view_res"])
+        if len(info["view_rots"][i]) == 9:
+            pose[2, 4] = info["cam_params"]["fx"]
+        elif len(info["view_rots"][i]) == 2:
+            cam_par = _convert_camera_params(info["cam_params"],info["view_res"])
+            # print("cam_par", cam_par)
+            pose[2,4] = cam_par["fx"]
         pose = pose.flatten()
         pose = np.concatenate((pose, [near,far])) 
         ## better to know the near and far plane from Unity-DengNianchen. 
