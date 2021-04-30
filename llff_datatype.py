@@ -65,9 +65,9 @@ def load_pose_json(filename,near,far):
         pose[0, 4] = info["view_res"]["x"]
         pose[1, 4] = info["view_res"]["y"]
         # print(info["view_res"])
-        if len(info["view_rots"][i]) == 9:
+        if "fx" in info["cam_params"]:
             pose[2, 4] = info["cam_params"]["fx"]
-        elif len(info["view_rots"][i]) == 2:
+        else:
             cam_par = _convert_camera_params(info["cam_params"],info["view_res"])
             # print("cam_par", cam_par)
             pose[2,4] = cam_par["fx"]
