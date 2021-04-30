@@ -591,7 +591,7 @@ def train():
     sc = 1.
     center = None
     if args.dataset_type == 'llff':
-        images, poses, bds, render_poses, i_test, center = load_llff_data(args.datadir, args.N_rots, args.factor,
+        images, poses, bds, render_poses, i_test, center = load_llff_data(args.datadir, args.factor,
                                                                   recenter=True, bd_factor=.75,
                                                                   spherify=args.spherify)
         hwf = poses[0, :3, -1]
