@@ -52,11 +52,21 @@ def load_pose_json(filename,near,far):
             Rt[2, 1] = math.sin(math.radians(info["view_rots"][i][0]))
             Rt[1, 2] = -Rt[2,1]
             Rt[2, 2] = Rt[1,1]
+            #     flip rots row3 and col3
+            Rt[2] *= -1
+            Rt[:, 2] *= -1
         for j in range(3):
             Rt[j, 3] = info["view_centers"][i][j]
         # Rt = np.linalg.inv(Rt)
         Rt = Rt[:3,:4]
         Rt = np.concatenate([-Rt[:, 1:2], Rt[:, 0:1], -Rt[:, 2:3], Rt[:,3:4]],1)
+
+        # OGL to DX coordinate
+        if len(info["view_rots"][i]) == 2:
+            #     flip fy
+            # cam_par["fy"] *= -1
+            #     flip view center z
+            Rt[2, 3] *= -1
 
         pose[0,:4] = Rt[0]
         pose[1,:4] = Rt[2]
@@ -71,6 +81,10 @@ def load_pose_json(filename,near,far):
             cam_par = _convert_camera_params(info["cam_params"],info["view_res"])
             # print("cam_par", cam_par)
             pose[2,4] = cam_par["fx"]
+        # OGL to DX coordinate
+        if len(info["view_rots"][i]) == 2:
+            #     flip fy
+            cam_par["fy"] *= -1
         pose = pose.flatten()
         pose = np.concatenate((pose, [near,far])) 
         ## better to know the near and far plane from Unity-DengNianchen. 

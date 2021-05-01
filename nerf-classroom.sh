@@ -15,5 +15,5 @@ conda activate nerf
 
 cd /scratch/zh719/nerf
 
-python run_nerf.py --config config_classroom_0430.txt
+python run_nerf.py --config config_classroom_0501.txt
 
