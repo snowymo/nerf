@@ -1,0 +1,126 @@
+2021-05-02 09:39:44.042196: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2021-05-02 09:39:44.127684: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1618] Found device 0 with properties: 
+name: Quadro RTX 8000 major: 7 minor: 5 memoryClockRate(GHz): 1.62
+pciBusID: 0000:2f:00.0
+2021-05-02 09:39:44.139347: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.0
+2021-05-02 09:39:44.276650: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10.0
+2021-05-02 09:39:44.389567: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10.0
+2021-05-02 09:39:44.461225: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10.0
+2021-05-02 09:39:44.608803: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10.0
+2021-05-02 09:39:44.702322: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10.0
+2021-05-02 09:39:44.759216: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2021-05-02 09:39:44.766629: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1746] Adding visible gpu devices: 0
+2021-05-02 09:39:44.767245: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
+2021-05-02 09:39:44.776406: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2900000000 Hz
+2021-05-02 09:39:44.776559: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55b9f26c9210 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-02 09:39:44.776580: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2021-05-02 09:39:44.778689: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1618] Found device 0 with properties: 
+name: Quadro RTX 8000 major: 7 minor: 5 memoryClockRate(GHz): 1.62
+pciBusID: 0000:2f:00.0
+2021-05-02 09:39:44.778730: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.0
+2021-05-02 09:39:44.778741: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10.0
+2021-05-02 09:39:44.778750: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10.0
+2021-05-02 09:39:44.778759: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10.0
+2021-05-02 09:39:44.778769: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10.0
+2021-05-02 09:39:44.778778: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10.0
+2021-05-02 09:39:44.778787: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2021-05-02 09:39:44.782533: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1746] Adding visible gpu devices: 0
+2021-05-02 09:39:44.782580: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.0
+2021-05-02 09:39:44.888063: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1159] Device interconnect StreamExecutor with strength 1 edge matrix:
+2021-05-02 09:39:44.888111: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1165]      0 
+2021-05-02 09:39:44.888129: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1178] 0:   N 
+2021-05-02 09:39:44.893771: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:39] Overriding allow_growth setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
+2021-05-02 09:39:44.897925: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1304] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 43122 MB memory) -> physical GPU (device: 0, name: Quadro RTX 8000, pci bus id: 0000:2f:00.0, compute capability: 7.5)
+2021-05-02 09:39:44.899647: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x55b9f26c9b00 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2021-05-02 09:39:44.899670: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Quadro RTX 8000, Compute Capability 7.5
+WARNING:tensorflow:
+The TensorFlow contrib module will not be included in TensorFlow 2.0.
+For more information, please see:
+  * https://github.com/tensorflow/community/blob/master/rfcs/20180907-contrib-sunset.md
+  * https://github.com/tensorflow/addons
+  * https://github.com/tensorflow/io (for I/O related ops)
+If you depend on functionality not listed there, please file an issue.
+
+2021-05-02 10:00:43.433047: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10.0
+WARNING:tensorflow:From /scratch/zh719/nerf/run_nerf_helpers.py:207: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+2021-05-02 10:00:44.438112: E tensorflow/core/kernels/check_numerics_op.cc:199] abnormal_detected_host @0x1479f7c01d00 = {1, 0} output rgb_map
+Loaded image data (1600, 1440, 3, 514) [1600.         1440.          504.14941406]
+Loaded ./data/lobby_2021.04.30 1.0 50.0
+rescale 1.3333333333333333
+rescenter
+recentered c2w (3, 5)
+[[ 1.0000000e+00  0.0000000e+00 -2.4920937e-05 -4.7086757e-10]
+ [-0.0000000e+00  1.0000000e+00  0.0000000e+00  2.0792004e-09]
+ [ 2.4920939e-05  0.0000000e+00  1.0000000e+00 -2.9051472e-09]]
+Data:
+(514, 3, 5) (514, 1600, 1440, 3) (514, 2)
+HOLDOUT view is 512
+Loaded llff (514, 1600, 1440, 3) (514, 3, 5) [1600.     1440.      504.1494] ./data/lobby_2021.04.30
+Auto LLFF holdout, 8
+DEFINING BOUNDS
+NEAR FAR 0.0 1.0
+MODEL 63 27 <class 'int'> <class 'int'> True
+(?, 90) (?, 63) (?, 27)
+MODEL 63 27 <class 'int'> <class 'int'> True
+(?, 90) (?, 63) (?, 27)
+Found ckpts ['./logs/lobby_2021.04.30/model_000000.npy']
+Reloading from ./logs/lobby_2021.04.30/model_000000.npy
+Resetting step to 1
+Reloading fine from ./logs/lobby_2021.04.30/model_fine_000000.npy
+get rays
+done, concats
+shuffle rays
+done
+Begin
+TRAIN views are [ 64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80  81
+  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99
+ 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117
+ 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135
+ 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153
+ 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171
+ 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189
+ 190 191 192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207
+ 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223 224 225
+ 226 227 228 229 230 231 232 233 234 235 236 237 238 239 240 241 242 243
+ 244 245 246 247 248 249 250 251 252 253 254 255 256 257 258 259 260 261
+ 262 263 264 265 266 267 268 269 270 271 272 273 274 275 276 277 278 279
+ 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 295 296 297
+ 298 299 300 301 302 303 304 305 306 307 308 309 310 311 312 313 314 315
+ 316 317 318 319 320 321 322 323 324 325 326 327 328 329 330 331 332 333
+ 334 335 336 337 338 339 340 341 342 343 344 345 346 347 348 349 350 351
+ 352 353 354 355 356 357 358 359 360 361 362 363 364 365 366 367 368 369
+ 370 371 372 373 374 375 376 377 378 379 380 381 382 383 384 385 386 387
+ 388 389 390 391 392 393 394 395 396 397 398 399 400 401 402 403 404 405
+ 406 407 408 409 410 411 412 413 414 415 416 417 418 419 420 421 422 423
+ 424 425 426 427 428 429 430 431 432 433 434 435 436 437 438 439 440 441
+ 442 443 444 445 446 447 448 449 450 451 452 453 454 455 456 457 458 459
+ 460 461 462 463 464 465 466 467 468 469 470 471 472 473 474 475 476 477
+ 478 479 480 481 482 483 484 485 486 487 488 489 490 491 492 493 494 495
+ 496 497 498 499 500 501 502 503 504 505 506 507 508 509 510 511 512 513]
+TEST views are [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+ 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+ 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63]
+VAL views are [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+ 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+ 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63]
+lobby_2021.04.30 1 12.103377 0.12246999 1
+iter time 0.82472
+lobby_2021.04.30 2 12.6064415 0.11333802 2
+iter time 0.18135
+Traceback (most recent call last):
+  File "run_nerf.py", line 970, in <module>
+    train()
+  File "run_nerf.py", line 854, in train
+    verbose=i < 10, retraw=True, **render_kwargs_train)
+  File "run_nerf.py", line 337, in render
+    all_ret = batchify_rays(rays, chunk, **kwargs)
+  File "run_nerf.py", line 259, in batchify_rays
+    ret = render_rays(rays_flat[i:i+chunk], **kwargs)
+  File "run_nerf.py", line 250, in render_rays
+    tf.debugging.check_numerics(ret[k], 'output {}'.format(k))
+  File "/scratch/zh719/anaconda3/envs/nerf/lib/python3.7/site-packages/tensorflow_core/python/ops/gen_array_ops.py", line 1006, in check_numerics
+    _six.raise_from(_core._status_to_exception(e.code, message), None)
+  File "<string>", line 3, in raise_from
+tensorflow.python.framework.errors_impl.InvalidArgumentError: output rgb_map : Tensor had NaN values [Op:CheckNumerics]
