@@ -142,6 +142,20 @@ def render_rays(ray_batch,
         weights = alpha * \
             tf.math.cumprod(1.-alpha + 1e-10, axis=-1, exclusive=True)
 
+        try:
+            tf.debugging.check_numerics(alpha, 'alpha')
+        except Exception as err:
+            print('alpha check failed')
+        try:
+            tf.debugging.check_numerics(dists, 'dists')
+        except Exception as err:
+            print('dists check failed')
+        try:
+            tf.debugging.check_numerics(tf.linalg.norm(rays_d[..., None, :], axis=-1), 'rays_d norm')
+        except Exception as err:
+            print('rays_d norm check failed')
+            print(rays_d.eval())
+            
         # Computed weighted color of each sample along each ray.
         rgb_map = tf.reduce_sum(
             weights[..., None] * rgb, axis=-2)  # [N_rays, 3]
