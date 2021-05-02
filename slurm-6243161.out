@@ -1,0 +1,123 @@
+2021-05-01 09:24:05.851416: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2021-05-01 09:24:05.889323: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1618] Found device 0 with properties: 
+name: Quadro RTX 8000 major: 7 minor: 5 memoryClockRate(GHz): 1.62
+pciBusID: 0000:06:00.0
+2021-05-01 09:24:05.904005: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.0
+2021-05-01 09:24:06.013542: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10.0
+2021-05-01 09:24:06.120430: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10.0
+2021-05-01 09:24:06.246937: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10.0
+2021-05-01 09:24:06.405148: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10.0
+2021-05-01 09:24:06.655693: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10.0
+2021-05-01 09:24:06.782449: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2021-05-01 09:24:06.786252: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1746] Adding visible gpu devices: 0
+2021-05-01 09:24:06.786822: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
+2021-05-01 09:24:06.792548: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2900000000 Hz
+2021-05-01 09:24:06.792703: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x557f4f8cf410 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-01 09:24:06.792723: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2021-05-01 09:24:06.794850: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1618] Found device 0 with properties: 
+name: Quadro RTX 8000 major: 7 minor: 5 memoryClockRate(GHz): 1.62
+pciBusID: 0000:06:00.0
+2021-05-01 09:24:06.794885: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.0
+2021-05-01 09:24:06.794899: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10.0
+2021-05-01 09:24:06.794910: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10.0
+2021-05-01 09:24:06.794921: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10.0
+2021-05-01 09:24:06.794932: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10.0
+2021-05-01 09:24:06.794942: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10.0
+2021-05-01 09:24:06.794953: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2021-05-01 09:24:06.798926: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1746] Adding visible gpu devices: 0
+2021-05-01 09:24:06.798977: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.0
+2021-05-01 09:24:06.888841: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1159] Device interconnect StreamExecutor with strength 1 edge matrix:
+2021-05-01 09:24:06.888888: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1165]      0 
+2021-05-01 09:24:06.888909: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1178] 0:   N 
+2021-05-01 09:24:06.894594: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:39] Overriding allow_growth setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
+2021-05-01 09:24:06.897280: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1304] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 43122 MB memory) -> physical GPU (device: 0, name: Quadro RTX 8000, pci bus id: 0000:06:00.0, compute capability: 7.5)
+2021-05-01 09:24:06.898952: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x557f505ecc30 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2021-05-01 09:24:06.898977: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Quadro RTX 8000, Compute Capability 7.5
+2021-05-01 09:24:18.415462: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10.0
+WARNING:tensorflow:From /scratch/zh719/nerf/run_nerf_helpers.py:207: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+Loaded image data (1600, 1440, 3, 129) [1600.         1440.          504.14941406]
+Loaded ./data/classroom_2021.04.30 1.0 50.0
+rescale 1.3333333333333333
+rescenter
+recentered c2w (3, 5)
+[[ 1.0000000e+00  0.0000000e+00  0.0000000e+00 -1.3754091e-09]
+ [ 0.0000000e+00  1.0000000e+00  0.0000000e+00  2.2923485e-09]
+ [ 0.0000000e+00  0.0000000e+00  1.0000000e+00  0.0000000e+00]]
+Data:
+(129, 3, 5) (129, 1600, 1440, 3) (129, 2)
+HOLDOUT view is 128
+Loaded llff (129, 1600, 1440, 3) (129, 3, 5) [1600.     1440.      504.1494] ./data/classroom_2021.04.30
+Auto LLFF holdout, 8
+DEFINING BOUNDS
+NEAR FAR 0.0 1.0
+MODEL 63 27 <class 'int'> <class 'int'> True
+(?, 90) (?, 63) (?, 27)
+MODEL 63 27 <class 'int'> <class 'int'> True
+(?, 90) (?, 63) (?, 27)
+Found ckpts ['./logs/classroom_2021.05.01/model_000000.npy', './logs/classroom_2021.05.01/model_010000.npy', './logs/classroom_2021.05.01/model_020000.npy', './logs/classroom_2021.05.01/model_030000.npy']
+Reloading from ./logs/classroom_2021.05.01/model_030000.npy
+Resetting step to 30001
+Reloading fine from ./logs/classroom_2021.05.01/model_fine_030000.npy
+RENDER ONLY
+test poses shape (16, 3, 4)
+0 5.0067901611328125e-06
+(1600, 1440, 3) (1600, 1440)
+14.293551445007324
+1 143.8167119026184
+20.192511081695557
+2 138.47027587890625
+14.668723344802856
+3 138.03773427009583
+19.896249771118164
+4 139.14865732192993
+15.046617984771729
+5 137.89476656913757
+19.92720127105713
+6 138.91085934638977
+15.345978736877441
+7 137.8286418914795
+19.943764209747314
+8 139.02279829978943
+15.421363115310669
+9 138.2909574508667
+21.35021209716797
+10 139.23092889785767
+15.28623342514038
+11 138.53933191299438
+20.75493574142456
+12 139.4151451587677
+15.285321474075317
+13 138.61029291152954
+20.774922370910645
+14 138.95436072349548
+15.440013408660889
+15 138.2239351272583
+20.668485164642334
+Done rendering ./logs/classroom_2021.05.01/renderonly_test_030001
+Traceback (most recent call last):
+  File "/scratch/zh719/anaconda3/envs/nerf/lib/python3.7/site-packages/imageio/plugins/ffmpeg.py", line 59, in _get_ffmpeg_api
+    import imageio_ffmpeg
+ModuleNotFoundError: No module named 'imageio_ffmpeg'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "run_nerf.py", line 962, in <module>
+    train()
+  File "run_nerf.py", line 734, in train
+    to8b(rgbs), fps=30, quality=8)
+  File "/scratch/zh719/anaconda3/envs/nerf/lib/python3.7/site-packages/imageio/core/functions.py", line 397, in mimwrite
+    writer = get_writer(uri, format, "I", **kwargs)
+  File "/scratch/zh719/anaconda3/envs/nerf/lib/python3.7/site-packages/imageio/core/functions.py", line 231, in get_writer
+    return format.get_writer(request)
+  File "/scratch/zh719/anaconda3/envs/nerf/lib/python3.7/site-packages/imageio/core/format.py", line 185, in get_writer
+    return self.Writer(self, request)
+  File "/scratch/zh719/anaconda3/envs/nerf/lib/python3.7/site-packages/imageio/core/format.py", line 221, in __init__
+    self._open(**self.request.kwargs.copy())
+  File "/scratch/zh719/anaconda3/envs/nerf/lib/python3.7/site-packages/imageio/plugins/ffmpeg.py", line 525, in _open
+    self._ffmpeg_api = _get_ffmpeg_api()
+  File "/scratch/zh719/anaconda3/envs/nerf/lib/python3.7/site-packages/imageio/plugins/ffmpeg.py", line 62, in _get_ffmpeg_api
+    "To use the imageio ffmpeg plugin you need to "
+ImportError: To use the imageio ffmpeg plugin you need to 'pip install imageio-ffmpeg'

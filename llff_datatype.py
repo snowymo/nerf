@@ -47,6 +47,11 @@ def load_pose_json(filename,near,far):
         if len(info["view_rots"][i]) == 9:
             for j in range(9):
                 Rt[j // 3, j % 3] = info["view_rots"][i][j]
+        #     right up backward -> down right backward
+            temp = Rt[:,0]
+            Rt[:,0] = Rt[:,1]
+            Rt[:,1] = temp
+            Rt[1,0] *= -1
         elif len(info["view_rots"][i]) == 2:
             Rt[1, 1] = math.cos(math.radians(info["view_rots"][i][0]))
             Rt[2, 1] = math.sin(math.radians(info["view_rots"][i][0]))
@@ -111,4 +116,4 @@ if __name__ == "__main__":
     near = args.near
     far = args.far
     poses = load_pose_json(jsonfile,near,far)
-    np.save("poses_bounds.npy", poses)
+    np.save(args.train_json+"poses_bounds.npy", poses)
