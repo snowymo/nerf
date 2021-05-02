@@ -49,7 +49,7 @@ def load_pose_json(filename,near,far):
                 Rt[j // 3, j % 3] = info["view_rots"][i][j]
         #     right up backward -> down right backward
             temp = Rt[:,0]
-            Rt[:,0] *= Rt[:,1]
+            Rt[:,0] = Rt[:,1]
             Rt[:,1] = temp
             Rt[:, 0] *= -1
         elif len(info["view_rots"][i]) == 2:
