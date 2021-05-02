@@ -205,6 +205,10 @@ def render_rays(ray_batch,
 
     # Evaluate model at each point.
     raw = network_query_fn(pts, viewdirs, network_fn)  # [N_rays, N_samples, 4]
+    # Debug // dnc >>>
+    tf.debugging.check_numerics(raw[..., :3], 'raw rgb')
+    tf.debugging.check_numerics(raw[..., 3], 'raw density')
+    # <<<
     rgb_map, disp_map, acc_map, weights, depth_map = raw2outputs(
         raw, z_vals, rays_d)
 
@@ -226,6 +230,10 @@ def render_rays(ray_batch,
         # Make predictions with network_fine.
         run_fn = network_fn if network_fine is None else network_fine
         raw = network_query_fn(pts, viewdirs, run_fn)
+        # Debug // dnc >>>
+        tf.debugging.check_numerics(raw[..., :3], 'raw rgb 1')
+        tf.debugging.check_numerics(raw[..., 3], 'raw density 1')
+        # <<<
         rgb_map, disp_map, acc_map, weights, depth_map = raw2outputs(
             raw, z_vals, rays_d)
 
