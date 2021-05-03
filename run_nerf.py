@@ -281,7 +281,7 @@ def batchify_rays(rays_flat, chunk=1024*32, **kwargs):
 
 
 def render(H, W, focal,
-           chunk=1024*32, rays=None, c2w=None, ndc=True,
+           chunk=1024*32, rays=None, c2w=None, ndc=False,
            near=0., far=1.,
            use_viewdirs=False, c2w_staticcam=None,
            **kwargs):
