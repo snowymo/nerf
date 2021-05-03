@@ -1,0 +1,172 @@
+2021-05-02 23:04:15.741401: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcuda.so.1
+2021-05-02 23:04:15.783409: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1618] Found device 0 with properties: 
+name: Tesla V100-PCIE-32GB major: 7 minor: 0 memoryClockRate(GHz): 1.38
+pciBusID: 0000:d8:00.0
+2021-05-02 23:04:15.784661: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.0
+2021-05-02 23:04:15.797687: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10.0
+2021-05-02 23:04:15.810581: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10.0
+2021-05-02 23:04:15.819694: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10.0
+2021-05-02 23:04:15.834059: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10.0
+2021-05-02 23:04:15.846576: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10.0
+2021-05-02 23:04:15.870739: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2021-05-02 23:04:15.873790: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1746] Adding visible gpu devices: 0
+2021-05-02 23:04:15.874312: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX AVX2 AVX512F FMA
+2021-05-02 23:04:15.879984: I tensorflow/core/platform/profile_utils/cpu_utils.cc:94] CPU Frequency: 2900000000 Hz
+2021-05-02 23:04:15.880131: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x558fd3c43030 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+2021-05-02 23:04:15.880152: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Host, Default Version
+2021-05-02 23:04:15.881792: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1618] Found device 0 with properties: 
+name: Tesla V100-PCIE-32GB major: 7 minor: 0 memoryClockRate(GHz): 1.38
+pciBusID: 0000:d8:00.0
+2021-05-02 23:04:15.881829: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.0
+2021-05-02 23:04:15.881840: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10.0
+2021-05-02 23:04:15.881850: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcufft.so.10.0
+2021-05-02 23:04:15.881859: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcurand.so.10.0
+2021-05-02 23:04:15.881869: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusolver.so.10.0
+2021-05-02 23:04:15.881878: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcusparse.so.10.0
+2021-05-02 23:04:15.881887: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudnn.so.7
+2021-05-02 23:04:15.884814: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1746] Adding visible gpu devices: 0
+2021-05-02 23:04:15.884859: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcudart.so.10.0
+2021-05-02 23:04:15.991968: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1159] Device interconnect StreamExecutor with strength 1 edge matrix:
+2021-05-02 23:04:15.992025: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1165]      0 
+2021-05-02 23:04:15.992044: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1178] 0:   N 
+2021-05-02 23:04:15.997850: W tensorflow/core/common_runtime/gpu/gpu_bfc_allocator.cc:39] Overriding allow_growth setting because the TF_FORCE_GPU_ALLOW_GROWTH environment variable is set. Original config value was 0.
+2021-05-02 23:04:16.000401: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1304] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 30591 MB memory) -> physical GPU (device: 0, name: Tesla V100-PCIE-32GB, pci bus id: 0000:d8:00.0, compute capability: 7.0)
+2021-05-02 23:04:16.002244: I tensorflow/compiler/xla/service/service.cc:168] XLA service 0x558fd4bf2980 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+2021-05-02 23:04:16.002270: I tensorflow/compiler/xla/service/service.cc:176]   StreamExecutor device (0): Tesla V100-PCIE-32GB, Compute Capability 7.0
+WARNING:tensorflow:
+The TensorFlow contrib module will not be included in TensorFlow 2.0.
+For more information, please see:
+  * https://github.com/tensorflow/community/blob/master/rfcs/20180907-contrib-sunset.md
+  * https://github.com/tensorflow/addons
+  * https://github.com/tensorflow/io (for I/O related ops)
+If you depend on functionality not listed there, please file an issue.
+
+2021-05-02 23:26:26.147440: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10.0
+WARNING:tensorflow:From /scratch/zh719/nerf/run_nerf_helpers.py:207: where (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+2021-05-02 23:29:55.296905: E tensorflow/core/kernels/check_numerics_op.cc:199] abnormal_detected_host @0x1497d4c02500 = {1, 0} alpha
+2021-05-02 23:29:55.297175: E tensorflow/core/kernels/check_numerics_op.cc:199] abnormal_detected_host @0x1497d4c02500 = {1, 0} dists
+2021-05-02 23:29:55.297617: E tensorflow/core/kernels/check_numerics_op.cc:199] abnormal_detected_host @0x1497d4c02500 = {1, 0} rays_d norm
+Loaded image data (1600, 1440, 3, 514) [1600.         1440.          504.14941406]
+Loaded ./data/stones_2021.04.30 5.0 50.0
+rescale 0.26666666666666666
+rescenter
+recentered c2w (3, 5)
+[[ 1.0000000e+00 -0.0000000e+00  2.7011606e-06 -1.8841753e-09]
+ [ 0.0000000e+00  1.0000000e+00  0.0000000e+00  5.7755568e-11]
+ [-2.7011606e-06  0.0000000e+00  1.0000000e+00  6.3522942e-10]]
+Data:
+(514, 3, 5) (514, 1600, 1440, 3) (514, 2)
+HOLDOUT view is 512
+Loaded llff (514, 1600, 1440, 3) (514, 3, 5) [1600.     1440.      504.1494] ./data/stones_2021.04.30
+Auto LLFF holdout, 8
+DEFINING BOUNDS
+NEAR FAR 0.0 1.0
+MODEL 63 27 <class 'int'> <class 'int'> True
+(?, 90) (?, 63) (?, 27)
+MODEL 63 27 <class 'int'> <class 'int'> True
+(?, 90) (?, 63) (?, 27)
+Found ckpts ['./logs/stones_2021.04.30/model_000000.npy']
+Reloading from ./logs/stones_2021.04.30/model_000000.npy
+Resetting step to 1
+Reloading fine from ./logs/stones_2021.04.30/model_fine_000000.npy
+get rays
+done, concats
+shuffle rays
+done
+Begin
+TRAIN views are [ 64  65  66  67  68  69  70  71  72  73  74  75  76  77  78  79  80  81
+  82  83  84  85  86  87  88  89  90  91  92  93  94  95  96  97  98  99
+ 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117
+ 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135
+ 136 137 138 139 140 141 142 143 144 145 146 147 148 149 150 151 152 153
+ 154 155 156 157 158 159 160 161 162 163 164 165 166 167 168 169 170 171
+ 172 173 174 175 176 177 178 179 180 181 182 183 184 185 186 187 188 189
+ 190 191 192 193 194 195 196 197 198 199 200 201 202 203 204 205 206 207
+ 208 209 210 211 212 213 214 215 216 217 218 219 220 221 222 223 224 225
+ 226 227 228 229 230 231 232 233 234 235 236 237 238 239 240 241 242 243
+ 244 245 246 247 248 249 250 251 252 253 254 255 256 257 258 259 260 261
+ 262 263 264 265 266 267 268 269 270 271 272 273 274 275 276 277 278 279
+ 280 281 282 283 284 285 286 287 288 289 290 291 292 293 294 295 296 297
+ 298 299 300 301 302 303 304 305 306 307 308 309 310 311 312 313 314 315
+ 316 317 318 319 320 321 322 323 324 325 326 327 328 329 330 331 332 333
+ 334 335 336 337 338 339 340 341 342 343 344 345 346 347 348 349 350 351
+ 352 353 354 355 356 357 358 359 360 361 362 363 364 365 366 367 368 369
+ 370 371 372 373 374 375 376 377 378 379 380 381 382 383 384 385 386 387
+ 388 389 390 391 392 393 394 395 396 397 398 399 400 401 402 403 404 405
+ 406 407 408 409 410 411 412 413 414 415 416 417 418 419 420 421 422 423
+ 424 425 426 427 428 429 430 431 432 433 434 435 436 437 438 439 440 441
+ 442 443 444 445 446 447 448 449 450 451 452 453 454 455 456 457 458 459
+ 460 461 462 463 464 465 466 467 468 469 470 471 472 473 474 475 476 477
+ 478 479 480 481 482 483 484 485 486 487 488 489 490 491 492 493 494 495
+ 496 497 498 499 500 501 502 503 504 505 506 507 508 509 510 511 512 513]
+TEST views are [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+ 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+ 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63]
+VAL views are [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+ 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+ 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63]
+stones_2021.04.30 1 13.357867 0.1023646 1
+iter time 0.63310
+stones_2021.04.30 2 13.931011 0.084516674 2
+iter time 0.13099
+stones_2021.04.30 3 14.935287 0.06460967 3
+iter time 0.13008
+stones_2021.04.30 4 15.673973 0.053441025 4
+iter time 0.12978
+stones_2021.04.30 5 16.343128 0.04635565 5
+iter time 0.12990
+stones_2021.04.30 6 16.560286 0.045365296 6
+iter time 0.12990
+stones_2021.04.30 7 16.33906 0.04500796 7
+iter time 0.12980
+stones_2021.04.30 8 16.60443 0.04226356 8
+iter time 0.12993
+stones_2021.04.30 9 16.446583 0.043767508 9
+iter time 0.12950
+stones_2021.04.30 100 20.019102 0.019802561 100
+iter time 0.13016
+stones_2021.04.30 200 20.517628 0.017718919 200
+iter time 0.12981
+stones_2021.04.30 300 20.034842 0.019519066 300
+iter time 0.12959
+stones_2021.04.30 400 20.54626 0.017619042 400
+iter time 0.12969
+stones_2021.04.30 500 20.649614 0.016814634 500
+iter time 0.12963
+stones_2021.04.30 600 20.81988 0.01656777 600
+iter time 0.12977
+stones_2021.04.30 700 20.756033 0.016763618 700
+iter time 0.12986
+stones_2021.04.30 800 20.568377 0.017654018 800
+iter time 0.12980
+alpha check failed
+dists check failed
+rays_d norm check failed
+Traceback (most recent call last):
+  File "run_nerf.py", line 154, in raw2outputs
+    tf.debugging.check_numerics(tf.linalg.norm(rays_d[..., None, :], axis=-1), 'rays_d norm')
+  File "/scratch/zh719/anaconda3/envs/nerf/lib/python3.7/site-packages/tensorflow_core/python/ops/gen_array_ops.py", line 1006, in check_numerics
+    _six.raise_from(_core._status_to_exception(e.code, message), None)
+  File "<string>", line 3, in raise_from
+tensorflow.python.framework.errors_impl.InvalidArgumentError: rays_d norm : Tensor had NaN values [Op:CheckNumerics]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "run_nerf.py", line 984, in <module>
+    train()
+  File "run_nerf.py", line 868, in train
+    verbose=i < 10, retraw=True, **render_kwargs_train)
+  File "run_nerf.py", line 351, in render
+    all_ret = batchify_rays(rays, chunk, **kwargs)
+  File "run_nerf.py", line 273, in batchify_rays
+    ret = render_rays(rays_flat[i:i+chunk], **kwargs)
+  File "run_nerf.py", line 227, in render_rays
+    raw, z_vals, rays_d)
+  File "run_nerf.py", line 157, in raw2outputs
+    print(rays_d.eval())
+  File "/scratch/zh719/anaconda3/envs/nerf/lib/python3.7/site-packages/tensorflow_core/python/framework/ops.py", line 1115, in eval
+    "eval is not supported when eager execution is enabled, "
+NotImplementedError: eval is not supported when eager execution is enabled, is .numpy() what you're looking for?

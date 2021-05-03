@@ -86,6 +86,8 @@ def load_pose_json(filename,near,far):
             cam_par = _convert_camera_params(info["cam_params"],info["view_res"])
             # print("cam_par", cam_par)
             pose[2,4] = cam_par["fx"]
+            pose[2,4] = 560.166104085872
+            print("fx", cam_par["fx"])
         # OGL to DX coordinate
         if len(info["view_rots"][i]) == 2:
             #     flip fy
