@@ -377,7 +377,7 @@ def render_path(render_poses, hwf, chunk, render_kwargs, gt_imgs=None, savedir=N
         print(i, time.time() - t)
         t = time.time()
         rgb, disp, acc, _ = render(
-            H, W, focal, chunk=chunk, c2w=c2w[:3, :4], **render_kwargs)
+            H, W, focal, chunk=chunk, c2w=c2w[:3, :4], ndc=args.NDC, **render_kwargs)
         rgbs.append(rgb.numpy())
         disps.append(disp.numpy())
         if i == 0:
@@ -544,6 +544,8 @@ def config_parser():
                         help='log2 of max freq for positional encoding (2D direction)')
     parser.add_argument("--raw_noise_std", type=float, default=0.,
                         help='std dev of noise added to regularize sigma_a output, 1e0 recommended')
+    parser.add_argument("--NDC", type=bool, default=False,
+                        help="NDC, normalized coordinates if facing forward")
 
     parser.add_argument("--render_only", action='store_true',
                         help='do not optimize, reload weights and render out render_poses path')
@@ -864,7 +866,7 @@ def train():
 
             # Make predictions for color, disparity, accumulated opacity.
             rgb, disp, acc, extras = render(
-                H, W, focal, chunk=args.chunk, rays=batch_rays,
+                H, W, focal, chunk=args.chunk, rays=batch_rays, ndc=args.NDC,
                 verbose=i < 10, retraw=True, **render_kwargs_train)
 
             # Compute MSE loss between predicted and true RGB.
@@ -945,7 +947,7 @@ def train():
                 target = images[img_i]
                 pose = poses[img_i, :3, :4]
 
-                rgb, disp, acc, extras = render(H, W, focal, chunk=args.chunk, c2w=pose,
+                rgb, disp, acc, extras = render(H, W, focal, chunk=args.chunk, c2w=pose,ndc=args.NDC,
                                                 **render_kwargs_test)
 
                 psnr = mse2psnr(img2mse(rgb, target))
