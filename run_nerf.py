@@ -359,7 +359,7 @@ def render(H, W, focal,
     return ret_list + [ret_dict]
 
 
-def render_path(render_poses, hwf, chunk, render_kwargs, gt_imgs=None, savedir=None, render_factor=0):
+def render_path(render_poses, hwf, chunk, render_kwargs, gt_imgs=None, savedir=None, render_factor=0, ndc = False):
 
     H, W, focal = hwf
 
@@ -377,7 +377,7 @@ def render_path(render_poses, hwf, chunk, render_kwargs, gt_imgs=None, savedir=N
         print(i, time.time() - t)
         t = time.time()
         rgb, disp, acc, _ = render(
-            H, W, focal, chunk=chunk, c2w=c2w[:3, :4], ndc=args.NDC, **render_kwargs)
+            H, W, focal, chunk=chunk, c2w=c2w[:3, :4], ndc=ndc, **render_kwargs)
         rgbs.append(rgb.numpy())
         disps.append(disp.numpy())
         if i == 0:
@@ -752,7 +752,7 @@ def train():
         print('test poses shape', render_poses.shape)
 
         rgbs, _ = render_path(render_poses, hwf, args.chunk, render_kwargs_test,
-                              gt_imgs=images, savedir=testsavedir, render_factor=args.render_factor)
+                              gt_imgs=images, savedir=testsavedir, render_factor=args.render_factor, ndc=args.NDC)
         print('Done rendering', testsavedir)
         imageio.mimwrite(os.path.join(testsavedir, 'video.mp4'),
                          to8b(rgbs), fps=30, quality=8)
@@ -903,7 +903,7 @@ def train():
         if i % args.i_video == 0 and i > 0:
 
             rgbs, disps = render_path(
-                render_poses, hwf, args.chunk, render_kwargs_test)
+                render_poses, hwf, args.chunk, render_kwargs_test, ndc=args.NDC)
             print('Done, saving', rgbs.shape, disps.shape)
             moviebase = os.path.join(
                 basedir, expname, '{}_spiral_{:06d}_'.format(expname, i))
@@ -915,7 +915,7 @@ def train():
             if args.use_viewdirs:
                 render_kwargs_test['c2w_staticcam'] = render_poses[0][:3, :4]
                 rgbs_still, _ = render_path(
-                    render_poses, hwf, args.chunk, render_kwargs_test)
+                    render_poses, hwf, args.chunk, render_kwargs_test, ndc=args.NDC)
                 render_kwargs_test['c2w_staticcam'] = None
                 imageio.mimwrite(moviebase + 'rgb_still.mp4',
                                  to8b(rgbs_still), fps=30, quality=8)
@@ -926,7 +926,7 @@ def train():
             os.makedirs(testsavedir, exist_ok=True)
             print('test poses shape', poses[i_test].shape)
             render_path(poses[i_test], hwf, args.chunk, render_kwargs_test,
-                        gt_imgs=images[i_test], savedir=testsavedir)
+                        gt_imgs=images[i_test], savedir=testsavedir, ndc=args.NDC)
             print('Saved test set')
 
         if i % args.i_print == 0 or i < 10:
