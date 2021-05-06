@@ -3,7 +3,7 @@
 #SBATCH --job-name=nerfStones
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=80GB
+#SBATCH --mem=128GB
 #SBATCH --time=8:00:00
 #SBATCH --gres=gpu:1
 

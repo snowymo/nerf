@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=nerfLobby
+#SBATCH --job-name=barTest
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=128GB
@@ -15,5 +15,5 @@ conda activate nerf
 
 cd /scratch/zh719/nerf
 
-python run_nerf.py --config config_lobby_0430.txt
+python run_nerf.py --config config_bar_2021.05.04.txt --render_only
 
