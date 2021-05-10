@@ -633,8 +633,9 @@ def train():
             i_test = np.arange(images.shape[0])[0:int(images.shape[0] / args.llffhold):]
 
         i_val = i_test
-        i_train = np.array([i for i in np.arange(int(images.shape[0])) if
-                            (i not in i_test and i not in i_val)])
+        i_train = np.array([i for i in np.arange(int(images.shape[0]))])
+        # i_train = np.array([i for i in np.arange(int(images.shape[0])) if
+        #                     (i not in i_test and i not in i_val)])
 
         print('DEFINING BOUNDS')
         if args.no_ndc:
