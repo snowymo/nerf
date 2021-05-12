@@ -688,6 +688,10 @@ def train():
     H, W = int(H), int(W)
     hwf = [H, W, focal]
 
+    print('TRAIN views are', i_train)
+    print('TEST views are', i_test)
+    print('VAL views are', i_val)
+
     if args.render_test:
         render_poses = np.array(poses[i_test])
     if args.render_poses:
