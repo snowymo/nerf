@@ -630,7 +630,10 @@ def train():
         if args.llffhold > 0:
             print('Auto LLFF holdout,', args.llffhold)
             # i_test = np.arange(images.shape[0])[::args.llffhold]
-            i_test = np.arange(images.shape[0])[0:int(images.shape[0] / args.llffhold):]
+            # i_test = np.arange(images.shape[0])[0:int(images.shape[0] / args.llffhold):]
+            i_test = np.concatenate([np.arange(images.shape[0])[-4::],
+                                     np.arange(images.shape[0])[0:int(images.shape[0] / args.llffhold):]
+                                     ])
 
         i_val = i_test
         i_train = np.array([i for i in np.arange(int(images.shape[0]))])
