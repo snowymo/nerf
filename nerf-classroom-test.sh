@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH --job-name=nerfLobby
+#SBATCH --job-name=nerfClassroomTest
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=128GB
+#SBATCH --mem=32GB
 #SBATCH --time=8:00:00
 #SBATCH --gres=gpu:1
 
@@ -15,5 +15,5 @@ conda activate nerf
 
 cd /scratch/zh719/nerf
 
-python run_nerf.py --config config_lobby_0430.txt
+python run_nerf.py --config config_classroom_0501.txt --render_only
 

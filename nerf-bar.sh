@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --job-name=nerfLobby
+#SBATCH --job-name=nerfBar
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=128GB
-#SBATCH --time=8:00:00
+#SBATCH --time=23:00:00
 #SBATCH --gres=gpu:1
 
 module purge
@@ -15,5 +15,5 @@ conda activate nerf
 
 cd /scratch/zh719/nerf
 
-python run_nerf.py --config config_lobby_0430.txt
+python run_nerf.py --config config_bar_2021.05.04.txt
 
